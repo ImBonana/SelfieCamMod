@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "selfiecam",
+  "version": "${version}",
+  "name": "SelfieCam",
+  "description": "A mod that add a selfie camera",
+  "authors": [
+    "ImBanana"
+  ],
+  "contact": {
+    "homepage": ""
+  },
+  "license": "All-Rights-Reserved",
+  "icon": "assets/selfiecam/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "me.imbanana.selfiecam.fabric.SelfiecamFabricClient"
+    ]
+  },
+  "mixins": [
+    "selfiecam.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.18.1",
+    "minecraft": "~1.21.9",
+    "java": ">=21",
+    "architectury": ">=18.0.5",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}

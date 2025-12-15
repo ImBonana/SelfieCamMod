@@ -1,0 +1,8 @@
+{
+  "injected_interfaces": {
+    "net/minecraft/class_10055": [
+      "me/imbanana/selfiecam/accessors/IAvatarRenderState"
+    ]
+  },
+  "accessWidener": "selfiecam.accesswidener"
+}

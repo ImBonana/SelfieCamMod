@@ -1,0 +1,38 @@
+modLoader = "javafml"
+loaderVersion = "[2,)"
+#issueTrackerURL = ""
+license = "All Rights Reserved"
+
+[[mods]]
+modId = "selfiecam"
+version = "${version}"
+displayName = "SelfieCam"
+authors = "ImBanana"
+description = '''
+A mod that add a selfie camera
+'''
+#logoFile = ""
+
+[[dependencies.selfiecam]]
+modId = "neoforge"
+type = "required"
+versionRange = "[21,)"
+ordering = "NONE"
+side = "CLIENT"
+
+[[dependencies.selfiecam]]
+modId = "minecraft"
+type = "required"
+versionRange = "[1.21.9,)"
+ordering = "NONE"
+side = "CLIENT"
+
+[[dependencies.selfiecam]]
+modId = "architectury"
+type = "required"
+versionRange = "[18.0.5,)"
+ordering = "AFTER"
+side = "CLIENT"
+
+[[mixins]]
+config = "selfiecam.mixins.json"

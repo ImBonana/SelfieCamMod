@@ -1,0 +1,40 @@
+{
+    "targets": {},
+    "passes": [
+        {
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "selfiecam:post/color_matrix",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "minecraft:main"
+                }
+            ],
+            "output": "minecraft:main",
+            "uniforms": {
+                "ColorConfig": [
+                    {
+                        "name": "Saturation",
+                        "type": "float",
+                        "value": 0.9
+                    },
+                    {
+                        "name": "RedMatrix",
+                        "type": "vec3",
+                        "value": [ 1.045, 0.285, 0.0 ]
+                    },
+                    {
+                        "name": "GreenMatrix",
+                        "type": "vec3",
+                        "value": [ 0.095, 0.72, 0.0]
+                    },
+                    {
+                        "name": "BlueMatrix",
+                        "type": "vec3",
+                        "value": [ 0.0, 0.045, 0.51 ]
+                    }
+                ]
+            }
+        }
+    ]
+}
