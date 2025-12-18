@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ModShaders {
-    public static final List<ResourceLocation> shaderList = new ArrayList<>();
+    public static final List<ResourceLocation> SHADERS = new ArrayList<>();
 
     public static final ResourceLocation CLASSIC = register("classic");
     public static final ResourceLocation COOL = register("cool");
@@ -19,7 +19,7 @@ public class ModShaders {
 
     private static ResourceLocation register(String path) {
         ResourceLocation resourceLocation = SelfiecamClient.idOf(path);
-        shaderList.add(resourceLocation);
+        SHADERS.add(resourceLocation);
         return resourceLocation;
     }
 }

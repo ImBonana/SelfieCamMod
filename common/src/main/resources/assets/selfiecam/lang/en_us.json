@@ -1,0 +1,16 @@
+{
+    "filter.selfiecam.normal": "Normal",
+    "filter.selfiecam.classic": "Classic",
+    "filter.selfiecam.cool": "Cool",
+    "filter.selfiecam.grayscale": "Grayscale",
+    "filter.selfiecam.nostalgic": "Nostalgic",
+    "filter.selfiecam.retro": "Retro",
+    "filter.selfiecam.sky_blue": "Sky Blue",
+    "filter.selfiecam.vibrant": "Vibrant",
+
+    "gui.selfiecam.camera.zoom": "Zoom",
+
+    "key.selfiecam.selfie": "Selfie Camera",
+    "key.selfiecam.edit": "Camera Controls"
+
+}

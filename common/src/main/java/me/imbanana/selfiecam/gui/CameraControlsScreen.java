@@ -25,12 +25,13 @@ public class CameraControlsScreen extends AbstractContainerEventHandler {
     private int width;
     private int height;
 
-    private int selectedShader;
     private double oldZoomValueSlider;
+    private boolean isFiltersOpen = false;
 
     private ZoomSliderWidget sliderWidget;
     private Button takePicButton;
-    private Button testShaderButton;
+    private Button filterToggleButton;
+    private FilterSelectionWidget filterSelectionWidget;
 
     public void showOverlay() {
         this.isEnabled = true;
@@ -52,7 +53,6 @@ public class CameraControlsScreen extends AbstractContainerEventHandler {
         this.width = Minecraft.getInstance().getWindow().getGuiScaledWidth();
         this.height = Minecraft.getInstance().getWindow().getGuiScaledHeight();
 
-        this.selectedShader = -1;
         this.oldZoomValueSlider = ModCamera.DEFAULT_ZOOM;
 
         this.buildWidgets();
@@ -78,37 +78,53 @@ public class CameraControlsScreen extends AbstractContainerEventHandler {
         );
 
         this.takePicButton = Button.builder(
-                Component.literal("Take Pic"),
-                btn -> SelfiecamClient.getCameraController().takePic(1440, 3088)
-        )
-                .pos(0, 30)
-                .build();
-
-        this.testShaderButton = Button.builder(
-                        Component.literal("Camera Filter: " + (this.selectedShader == -1 ? "Normal" : ModShaders.shaderList.get(this.selectedShader).getPath())),
+                        Component.literal("Take Pic"),
                         btn -> {
-                            this.selectedShader++;
-                            if (this.selectedShader >= ModShaders.shaderList.size()) {
-                                this.selectedShader = -1;
-                            }
+                            SelfiecamClient.getCameraController().takePic(74 * 4, 20 * 4);
 
-                            String selected;
-                            if (this.selectedShader == -1) {
-                                Minecraft.getInstance().gameRenderer.clearPostEffect();
-                                selected = "Normal";
-                            } else {
-                                Minecraft.getInstance().gameRenderer.setPostEffect(ModShaders.shaderList.get(this.selectedShader));
-                                selected = ModShaders.shaderList.get(this.selectedShader).getPath();
-                            }
-                            btn.setMessage(Component.literal("Camera Filter: " + selected));
+                            // Capture All Shaders For UI
+//                            ModShaders.SHADERS.forEach(shader -> {
+//                                Minecraft.getInstance().gameRenderer.setPostEffect(shader);
+//                                SelfiecamClient.getCameraController().takePic(74 * 4, 20 * 4);
+//                            });
                         }
                 )
-                .pos(0, 70)
+                .pos(0, 0)
                 .build();
+
+        this.filterToggleButton = Button.builder(
+                        Component.literal(">"),
+                        button -> {
+                            isFiltersOpen = !isFiltersOpen;
+                            button.setMessage(Component.literal(isFiltersOpen ? "<" : ">"));
+
+                            if (isFiltersOpen) {
+                                this.filterSelectionWidget.show();
+                            } else {
+                                this.filterSelectionWidget.hide();
+                            }
+                        })
+                .pos(0, 50)
+                .size(20, 20)
+                .build();
+
+        this.filterSelectionWidget = new FilterSelectionWidget(
+                0,
+                70,
+                80,
+                100
+        );
+
+        if (isFiltersOpen) {
+            this.filterSelectionWidget.show();
+        } else {
+            this.filterSelectionWidget.hide();
+        }
 
         this.addRenderableWidget(this.sliderWidget);
         this.addRenderableWidget(this.takePicButton);
-        this.addRenderableWidget(this.testShaderButton);
+        this.addRenderableWidget(this.filterToggleButton);
+        this.addRenderableWidget(this.filterSelectionWidget);
     }
 
     public void tick() {

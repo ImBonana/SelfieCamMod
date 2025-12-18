@@ -64,7 +64,7 @@ public abstract class MouseHandlerMixin {
         ModCamera cameraController = SelfiecamClient.getCameraController();
         CameraControlsScreen screen = SelfiecamClient.getCameraControlsGui();
 
-        if (cameraController.isInSelfieMode()) {
+        if (cameraController.isInSelfieMode() && (!screen.isEnabled() || !screen.canInteract())) {
             cameraController.handleMouseScroll(scroll);
             ci.cancel();
         }
