@@ -77,20 +77,14 @@ public class CameraControlsScreen extends AbstractContainerEventHandler {
                 true
         );
 
-        this.takePicButton = Button.builder(
-                        Component.literal("Take Pic"),
-                        btn -> {
-                            SelfiecamClient.getCameraController().takePic(74 * 4, 20 * 4);
-
-                            // Capture All Shaders For UI
-//                            ModShaders.SHADERS.forEach(shader -> {
-//                                Minecraft.getInstance().gameRenderer.setPostEffect(shader);
-//                                SelfiecamClient.getCameraController().takePic(74 * 4, 20 * 4);
-//                            });
-                        }
-                )
-                .pos(0, 0)
-                .build();
+        this.takePicButton = new CapturePictureButton(
+                this.width - 42,
+                this.height - 42,
+                32,
+                32,
+                this.width,
+                this.height
+        );
 
         this.filterToggleButton = Button.builder(
                         Component.literal(">"),
