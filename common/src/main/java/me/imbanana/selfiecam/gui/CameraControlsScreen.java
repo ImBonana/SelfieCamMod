@@ -1,7 +1,6 @@
 package me.imbanana.selfiecam.gui;
 
 import me.imbanana.selfiecam.ModCamera;
-import me.imbanana.selfiecam.ModShaders;
 import me.imbanana.selfiecam.SelfiecamClient;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -12,6 +11,7 @@ import net.minecraft.client.gui.components.events.AbstractContainerEventHandler;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.debug.GameModeSwitcherScreen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,13 +29,14 @@ public class CameraControlsScreen extends AbstractContainerEventHandler {
     private boolean isFiltersOpen = false;
 
     private ZoomSliderWidget sliderWidget;
-    private Button takePicButton;
+    private CapturePictureButton capturePictureButton;
     private Button filterToggleButton;
     private FilterSelectionWidget filterSelectionWidget;
+    private RatioSelectionWidget ratioSelectionWidget;
 
     public void showOverlay() {
         this.isEnabled = true;
-        init();
+        this.init();
     }
 
     public void hideOverlay() {
@@ -77,7 +78,7 @@ public class CameraControlsScreen extends AbstractContainerEventHandler {
                 true
         );
 
-        this.takePicButton = new CapturePictureButton(
+        this.capturePictureButton = new CapturePictureButton(
                 this.width - 42,
                 this.height - 42,
                 32,
@@ -109,14 +110,22 @@ public class CameraControlsScreen extends AbstractContainerEventHandler {
                 100
         );
 
+        this.ratioSelectionWidget = new RatioSelectionWidget(
+                this.width / 2,
+                this.height / 2,
+                this.width,
+                this.height
+        );
+
         if (isFiltersOpen) {
             this.filterSelectionWidget.show();
         } else {
             this.filterSelectionWidget.hide();
         }
 
+        this.addRenderableWidget(this.ratioSelectionWidget); // Need to be first
         this.addRenderableWidget(this.sliderWidget);
-        this.addRenderableWidget(this.takePicButton);
+        this.addRenderableWidget(this.capturePictureButton);
         this.addRenderableWidget(this.filterToggleButton);
         this.addRenderableWidget(this.filterSelectionWidget);
     }
@@ -128,6 +137,9 @@ public class CameraControlsScreen extends AbstractContainerEventHandler {
             this.sliderWidget.setValue(SelfiecamClient.getCameraController().getZoomPercentage() * 100);
         }
         this.oldZoomValueSlider = this.sliderWidget.getValue();
+
+        this.capturePictureButton.setCaptureWidth(this.ratioSelectionWidget.getWidth());
+        this.capturePictureButton.setCaptureHeight(this.ratioSelectionWidget.getHeight());
     }
 
     public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
@@ -137,6 +149,7 @@ public class CameraControlsScreen extends AbstractContainerEventHandler {
         renderables.forEach(renderable -> renderable.render(guiGraphics, xPos, yPos, deltaTracker.getGameTimeDeltaPartialTick(false)));
     }
 
+    // TODO: fix screen not resizing when resizing app when in pause screen!
     public void resize(int width, int height) {
         this.width = width;
         this.height = height;
@@ -147,6 +160,22 @@ public class CameraControlsScreen extends AbstractContainerEventHandler {
     private <T extends GuiEventListener & Renderable> void addRenderableWidget(T widget) {
         this.renderables.add(widget);
         this.widgets.add(widget);
+    }
+
+    @Override
+    public boolean mouseClicked(MouseButtonEvent mouseButtonEvent, boolean bl) {
+        if (super.mouseClicked(mouseButtonEvent, bl)) return true;
+
+        if (this.ratioSelectionWidget.mouseClicked(mouseButtonEvent, bl)) {
+            this.setFocused(this.ratioSelectionWidget);
+            if (mouseButtonEvent.button() == 0) {
+                this.setDragging(true);
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     @Override

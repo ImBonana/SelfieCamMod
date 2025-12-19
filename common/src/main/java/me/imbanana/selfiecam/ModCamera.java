@@ -68,6 +68,7 @@ public class ModCamera {
         return MIN_ZOOM + (maxZoom - MIN_ZOOM) * percentage;
     }
 
+    // TODO: make this capture only the selected target and not resize the entire render target
     public void takePic(int targetResWidth, int targetResHeight) {
         Minecraft minecraft = Minecraft.getInstance();
         Window window = minecraft.getWindow();
