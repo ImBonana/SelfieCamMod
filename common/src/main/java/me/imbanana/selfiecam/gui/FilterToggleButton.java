@@ -4,12 +4,14 @@ import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import me.imbanana.selfiecam.SelfiecamClient;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ARGB;
 
+import java.time.Duration;
 import java.util.function.Supplier;
 
 public class FilterToggleButton extends Button {
@@ -19,6 +21,9 @@ public class FilterToggleButton extends Button {
         super(x, y, width, height, Component.translatable("gui.selfiecam.camera.filter"), button -> { }, Supplier::get);
 
         this.isOpen = isOpen;
+
+        this.setTooltip(Tooltip.create(this.getMessage()));
+        this.setTooltipDelay(Duration.ofMillis(500));
     }
 
     public boolean isOpen() {

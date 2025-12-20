@@ -138,6 +138,8 @@ public class CameraControlsScreen extends AbstractContainerEventHandler {
         int yPos = (int) Minecraft.getInstance().mouseHandler.getScaledYPos(Minecraft.getInstance().getWindow());
 
         renderables.forEach(renderable -> renderable.render(guiGraphics, xPos, yPos, deltaTracker.getGameTimeDeltaPartialTick(false)));
+
+        guiGraphics.renderDeferredElements();
     }
 
     // TODO: fix screen not resizing when resizing app when in pause screen!

@@ -23,7 +23,6 @@ public class CapturePictureButton extends Button {
         this.captureWidth = captureWidth;
         this.captureHeight = captureHeight;
 
-        // TODO: check why not worky :(
         this.setTooltip(Tooltip.create(this.getMessage()));
         this.setTooltipDelay(Duration.ofMillis(500));
     }
