@@ -38,20 +38,28 @@ public class RatioSelectionWidget extends AbstractWidget {
     }
 
     public void resize(int width, int height) {
-        this.setWidth(Math.clamp(width, 8, screenWidth));
-        this.setHeight(Math.clamp(height, 8, screenHeight));
+        this.setWidth(Math.clamp(width, 100, screenWidth));
+        this.setHeight(Math.clamp(height, 100, screenHeight));
 
         this.reposition(screenWidth, screenHeight);
     }
 
     public int getFrameBufferWidth() {
-        Window window = Minecraft.getInstance().getWindow();
-        return (int) Math.ceil((this.getWidth() / (float) window.getGuiScaledWidth()) * window.getWidth());
+        return getFrameBufferWidth(this.getWidth());
     }
 
     public int getFrameBufferHeight() {
+        return getFrameBufferHeight(this.getHeight());
+    }
+
+    private int getFrameBufferWidth(int width) {
         Window window = Minecraft.getInstance().getWindow();
-        return (int) Math.ceil((this.getHeight() / (float) window.getGuiScaledHeight()) * window.getHeight());
+        return (int) Math.ceil((width / (float) window.getGuiScaledWidth()) * window.getWidth());
+    }
+
+    public int getFrameBufferHeight(int height) {
+        Window window = Minecraft.getInstance().getWindow();
+        return (int) Math.ceil((height / (float) window.getGuiScaledHeight()) * window.getHeight());
     }
 
     @Override

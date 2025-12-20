@@ -108,11 +108,12 @@ public class CameraControlsScreen extends AbstractContainerEventHandler {
                 this.height
         );
 
-        this.addRenderableWidget(this.ratioSelectionWidget); // Need to be first
+        this.addRenderable(this.ratioSelectionWidget); // Need to be first
         this.addRenderableWidget(this.sliderWidget);
         this.addRenderableWidget(this.capturePictureButton);
         this.addRenderableWidget(this.filterToggleButton);
         this.addRenderableWidget(this.filterSelectionWidget);
+        this.addWidget(this.ratioSelectionWidget); // Need to be last
     }
 
     public void tick() {
@@ -154,6 +155,14 @@ public class CameraControlsScreen extends AbstractContainerEventHandler {
     private <T extends GuiEventListener & Renderable> void addRenderableWidget(T widget) {
         this.renderables.add(widget);
         this.widgets.add(widget);
+    }
+
+    private void addWidget(GuiEventListener widget) {
+        this.widgets.add(widget);
+    }
+
+    private void addRenderable(Renderable renderable) {
+        this.renderables.add(renderable);
     }
 
     @Override
