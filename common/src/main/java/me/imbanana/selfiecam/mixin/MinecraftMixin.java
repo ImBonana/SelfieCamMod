@@ -46,7 +46,6 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
     )
     private void resizeCameraControlsScreen(CallbackInfo ci) {
         CameraControlsScreen screen = SelfiecamClient.getCameraControlsGui();
-        if(!screen.isEnabled()) return;
 
         int newWidth = this.window.getGuiScaledWidth();
         int newHeight = this.window.getGuiScaledHeight();

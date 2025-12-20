@@ -134,6 +134,8 @@ public class CameraControlsScreen extends AbstractContainerEventHandler {
     }
 
     public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
+        guiGraphics.nextStratum();
+
         int xPos = (int) Minecraft.getInstance().mouseHandler.getScaledXPos(Minecraft.getInstance().getWindow());
         int yPos = (int) Minecraft.getInstance().mouseHandler.getScaledYPos(Minecraft.getInstance().getWindow());
 
@@ -142,7 +144,6 @@ public class CameraControlsScreen extends AbstractContainerEventHandler {
         guiGraphics.renderDeferredElements();
     }
 
-    // TODO: fix screen not resizing when resizing app when in pause screen!
     public void resize(int width, int height) {
         this.width = width;
         this.height = height;
