@@ -11,6 +11,7 @@
     "gui.selfiecam.camera.zoom": "Zoom",
     "gui.selfiecam.camera.capture": "Capture Picture",
     "gui.selfiecam.camera.select_ratio": "Select Ratio",
+    "gui.selfiecam.camera.filter": "Toggle Filter Menu",
 
     "key.selfiecam.selfie": "Selfie Camera",
     "key.selfiecam.edit": "Camera Controls"

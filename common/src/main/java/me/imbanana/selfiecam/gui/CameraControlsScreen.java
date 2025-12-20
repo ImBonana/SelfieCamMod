@@ -26,11 +26,10 @@ public class CameraControlsScreen extends AbstractContainerEventHandler {
     private int height;
 
     private double oldZoomValueSlider;
-    private boolean isFiltersOpen = false;
 
     private ZoomSliderWidget sliderWidget;
     private CapturePictureButton capturePictureButton;
-    private Button filterToggleButton;
+    private FilterToggleButton filterToggleButton;
     private FilterSelectionWidget filterSelectionWidget;
     private RatioSelectionWidget ratioSelectionWidget;
 
@@ -87,25 +86,17 @@ public class CameraControlsScreen extends AbstractContainerEventHandler {
                 this.height
         );
 
-        this.filterToggleButton = Button.builder(
-                        Component.literal(">"),
-                        button -> {
-                            isFiltersOpen = !isFiltersOpen;
-                            button.setMessage(Component.literal(isFiltersOpen ? "<" : ">"));
-
-                            if (isFiltersOpen) {
-                                this.filterSelectionWidget.show();
-                            } else {
-                                this.filterSelectionWidget.hide();
-                            }
-                        })
-                .pos(0, 50)
-                .size(20, 20)
-                .build();
+        this.filterToggleButton = new FilterToggleButton(
+                this.width - 42,
+                this.height - 184,
+                32,
+                32,
+                false
+        );
 
         this.filterSelectionWidget = new FilterSelectionWidget(
-                0,
-                70,
+                this.width - 80,
+                this.height - 152,
                 80,
                 100
         );
@@ -116,12 +107,6 @@ public class CameraControlsScreen extends AbstractContainerEventHandler {
                 this.width,
                 this.height
         );
-
-        if (isFiltersOpen) {
-            this.filterSelectionWidget.show();
-        } else {
-            this.filterSelectionWidget.hide();
-        }
 
         this.addRenderableWidget(this.ratioSelectionWidget); // Need to be first
         this.addRenderableWidget(this.sliderWidget);
@@ -140,6 +125,12 @@ public class CameraControlsScreen extends AbstractContainerEventHandler {
 
         this.capturePictureButton.setCaptureWidth(this.ratioSelectionWidget.getWidth());
         this.capturePictureButton.setCaptureHeight(this.ratioSelectionWidget.getHeight());
+
+        if (this.filterToggleButton.isOpen()) {
+            this.filterSelectionWidget.show();
+        } else {
+            this.filterSelectionWidget.hide();
+        }
     }
 
     public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
