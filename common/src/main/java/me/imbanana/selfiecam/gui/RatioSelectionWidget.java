@@ -1,5 +1,6 @@
 package me.imbanana.selfiecam.gui;
 
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.platform.cursor.CursorType;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import me.imbanana.selfiecam.SelfiecamClient;
@@ -43,8 +44,20 @@ public class RatioSelectionWidget extends AbstractWidget {
         this.reposition(screenWidth, screenHeight);
     }
 
+    public int getFrameBufferWidth() {
+        Window window = Minecraft.getInstance().getWindow();
+        return (int) Math.ceil((this.getWidth() / (float) window.getGuiScaledWidth()) * window.getWidth());
+    }
+
+    public int getFrameBufferHeight() {
+        Window window = Minecraft.getInstance().getWindow();
+        return (int) Math.ceil((this.getHeight() / (float) window.getGuiScaledHeight()) * window.getHeight());
+    }
+
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int i, int j, float f) {
+        Minecraft minecraft = Minecraft.getInstance();
+
         guiGraphics.blitSprite(
                 RenderPipelines.GUI_TEXTURED,
                 SelfiecamClient.idOf("widget/ratio_selection"),
@@ -60,6 +73,19 @@ public class RatioSelectionWidget extends AbstractWidget {
         guiGraphics.fill(0, this.getBottom(), guiGraphics.guiWidth(), guiGraphics.guiHeight(), backgroundColor);
         guiGraphics.fill(0, this.getY(), this.getX(), this.getBottom(), backgroundColor);
         guiGraphics.fill(this.getRight(), this.getY(), guiGraphics.guiWidth(), this.getBottom(), backgroundColor);
+
+        guiGraphics.pose().pushMatrix();
+        guiGraphics.pose().rotateAbout((float) (Math.PI / 2f), this.getX(), this.getY());
+        String heightText = String.valueOf(this.getFrameBufferHeight());
+        int heightTextX = this.getX() + (this.height - minecraft.font.width(heightText)) / 2;
+        int heightTextY = this.getY() - minecraft.font.lineHeight - 2;
+        guiGraphics.drawString(minecraft.font, heightText, heightTextX, heightTextY, -1);
+        guiGraphics.pose().popMatrix();
+
+        String widthText = String.valueOf(this.getFrameBufferWidth());
+        int widthTextX = this.getX() + (this.width - minecraft.font.width(heightText)) / 2;
+        int widthTextY = this.getY() + 3;
+        guiGraphics.drawString(minecraft.font, widthText, widthTextX, widthTextY, -1);
 
         ResizeMode availableResizeMode = this.resizeMode == ResizeMode.NONE ? getAvailableMode(i, j) : this.resizeMode;
 

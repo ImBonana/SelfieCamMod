@@ -1,12 +1,24 @@
 package me.imbanana.selfiecam;
 
+import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.pipeline.RenderTarget;
+import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.platform.Window;
+import com.mojang.blaze3d.systems.CommandEncoder;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.textures.GpuTexture;
 import me.imbanana.selfiecam.mixin.CameraAccessor;
+import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Screenshot;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
 import org.joml.Vector2i;
+
+import java.io.File;
+import java.io.IOException;
 
 public class ModCamera {
     public static final float MIN_CAMERA_ANGLE = -90f;
@@ -68,32 +80,79 @@ public class ModCamera {
         return MIN_ZOOM + (maxZoom - MIN_ZOOM) * percentage;
     }
 
-    // TODO: make this capture only the selected target and not resize the entire render target
-    public void takePic(int targetResWidth, int targetResHeight) {
+    public void takePic(int width, int height) {
         Minecraft minecraft = Minecraft.getInstance();
-        Window window = minecraft.getWindow();
+        RenderTarget renderTarget = minecraft.getMainRenderTarget();
 
-        int width = window.getWidth();
-        int height = window.getHeight();
+
+        int startX = (renderTarget.width - width) / 2;
+        int startY = (renderTarget.height - height) / 2;
 
         try {
             this.shouldHideGUI = true;
-
-            RenderTarget renderTarget = minecraft.getMainRenderTarget();
-            window.setWidth(targetResWidth);
-            window.setHeight(targetResHeight);
-            renderTarget.resize(targetResWidth, targetResHeight);
-
             minecraft.gameRenderer.render(DeltaTracker.ONE, true);
 
-            Screenshot.grab(minecraft.gameDirectory, renderTarget, text -> minecraft.execute(() -> minecraft.gui.getChat().addMessage(text)));
+            GpuTexture gpuTexture = renderTarget.getColorTexture();
+
+            if (gpuTexture == null) throw new IllegalStateException("Tried to capture screenshot of an incomplete framebuffer");
+            GpuBuffer gpuBuffer = RenderSystem.getDevice().createBuffer(() -> "Picture Buffer",9, renderTarget.width * renderTarget.height * gpuTexture.getFormat().pixelSize());
+
+            CommandEncoder commandEncoder = RenderSystem.getDevice().createCommandEncoder();
+            RenderSystem.getDevice().createCommandEncoder().copyTextureToBuffer(gpuTexture, gpuBuffer, 0, () -> {
+                try (GpuBuffer.MappedView mappedView = commandEncoder.mapBuffer(gpuBuffer, true, false)) {
+                    NativeImage nativeImage = new NativeImage(width, height, false);
+
+                    for (int y = 0; y < height; y++) {
+                        for (int x = 0; x < width; x++) {
+                            int color = mappedView.data().getInt((startX + x + (startY + y) * renderTarget.width) * gpuTexture.getFormat().pixelSize());
+                            nativeImage.setPixelABGR(x, height - y - 1, color | 0xFF000000);
+                        }
+                    }
+
+                    File picDir = new File(minecraft.gameDirectory, "pictures");
+                    picDir.mkdir();
+                    File picFile = getFile(picDir);
+
+                    Util.ioPool().execute(() -> {
+                        try {
+                            nativeImage.writeToFile(picFile);
+                            minecraft.execute(() ->
+                                    minecraft.gui.getChat().addMessage(
+                                            Component.literal(picFile.getName())
+                                                    .withStyle(ChatFormatting.UNDERLINE)
+                                                    .withStyle(style ->
+                                                            style.withClickEvent(new ClickEvent.OpenFile(picFile.getAbsoluteFile()))
+                                                    )
+                                    )
+                            );
+                        } catch (IOException e) {
+                            SelfiecamClient.LOGGER.error("Couldn't save the picture", e);
+                        }
+
+                        nativeImage.close();
+                    });
+                }
+
+                gpuBuffer.close();
+            }, 0);
         } catch (Exception e) {
             SelfiecamClient.LOGGER.error("Couldn't save the picture", e);
         } finally {
-            window.setWidth(width);
-            window.setHeight(height);
-            minecraft.getMainRenderTarget().resize(width, height);
             this.shouldHideGUI = false;
+        }
+    }
+
+    private static File getFile(File file) {
+        String string = Util.getFilenameFormattedDateTime();
+        int i = 1;
+
+        while (true) {
+            File file2 = new File(file, string + (i == 1 ? "" : "_" + i) + ".png");
+            if (!file2.exists()) {
+                return file2;
+            }
+
+            i++;
         }
     }
 }

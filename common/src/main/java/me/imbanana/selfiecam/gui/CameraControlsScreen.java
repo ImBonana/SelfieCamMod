@@ -123,8 +123,8 @@ public class CameraControlsScreen extends AbstractContainerEventHandler {
         }
         this.oldZoomValueSlider = this.sliderWidget.getValue();
 
-        this.capturePictureButton.setCaptureWidth(this.ratioSelectionWidget.getWidth());
-        this.capturePictureButton.setCaptureHeight(this.ratioSelectionWidget.getHeight());
+        this.capturePictureButton.setCaptureWidth(this.ratioSelectionWidget.getFrameBufferWidth());
+        this.capturePictureButton.setCaptureHeight(this.ratioSelectionWidget.getFrameBufferHeight());
 
         if (this.filterToggleButton.isOpen()) {
             this.filterSelectionWidget.show();
