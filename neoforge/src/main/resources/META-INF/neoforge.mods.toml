@@ -1,7 +1,7 @@
 modLoader = "javafml"
 loaderVersion = "[2,)"
-#issueTrackerURL = ""
-license = "All Rights Reserved"
+issueTrackerURL = "https://github.com/ImBonana/SelfieCamMod/issues"
+license = "MIT"
 
 [[mods]]
 modId = "selfiecam"
@@ -11,7 +11,8 @@ authors = "ImBanana"
 description = '''
 A mod that add a selfie camera
 '''
-#logoFile = ""
+logoFile = "assets/selfiecam/icon.png"
+modUrl = "https://modrinth.com/project/selfiecam"
 
 [[dependencies.selfiecam]]
 modId = "neoforge"
@@ -23,14 +24,14 @@ side = "CLIENT"
 [[dependencies.selfiecam]]
 modId = "minecraft"
 type = "required"
-versionRange = "[1.21.9,)"
+versionRange = "[${mc_version},)"
 ordering = "NONE"
 side = "CLIENT"
 
 [[dependencies.selfiecam]]
 modId = "architectury"
 type = "required"
-versionRange = "[18.0.5,)"
+versionRange = "[${architectury_version},)"
 ordering = "AFTER"
 side = "CLIENT"
 
