@@ -2,6 +2,7 @@ plugins {
     id 'dev.architectury.loom' version '1.13-SNAPSHOT' apply false
     id 'architectury-plugin' version '3.4-SNAPSHOT'
     id 'com.github.johnrengelman.shadow' version '8.1.1' apply false
+    id "com.modrinth.minotaur" version "2.+"
 }
 
 architectury {
@@ -17,6 +18,7 @@ subprojects {
     apply plugin: 'dev.architectury.loom'
     apply plugin: 'architectury-plugin'
     apply plugin: 'maven-publish'
+    apply plugin: 'com.modrinth.minotaur'
 
     base {
         // Set up a suffixed format for the mod jar names, e.g. `example-fabric`.
@@ -65,6 +67,26 @@ subprojects {
             // Notice: This block does NOT have the same function as the block in the top level.
             // The repositories here will be used for publishing your artifact, not for
             // retrieving dependencies.
+        }
+    }
+
+    def loader = project.name;
+    if (project.enabled_platforms.split(",").contains(loader)) {
+        modrinth {
+            token = System.getenv("MODRINTH_TOKEN")
+            projectId = project.modrinth_id
+            versionName = project.mod_version
+            versionNumber = project.mod_version
+            versionType = "release"
+            uploadFile = remapJar
+            gameVersions = property("${loader}_game_versions").toString().split(",").toList()
+            loaders = [loader]
+
+            if (loader == "fabric") {
+                dependencies {
+                    required.project "fabric-api"
+                }
+            }
         }
     }
 }

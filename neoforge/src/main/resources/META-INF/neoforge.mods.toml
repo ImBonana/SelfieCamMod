@@ -24,15 +24,8 @@ side = "CLIENT"
 [[dependencies.selfiecam]]
 modId = "minecraft"
 type = "required"
-versionRange = "[${mc_version},)"
+versionRange = "${mc_version_range}"
 ordering = "NONE"
-side = "CLIENT"
-
-[[dependencies.selfiecam]]
-modId = "architectury"
-type = "required"
-versionRange = "[${architectury_version},)"
-ordering = "AFTER"
 side = "CLIENT"
 
 [[mixins]]

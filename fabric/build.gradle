@@ -33,22 +33,18 @@ dependencies {
 
     modImplementation "net.fabricmc.fabric-api:fabric-api:$rootProject.fabric_api_version"
 
-    modImplementation "dev.architectury:architectury-fabric:$rootProject.architectury_api_version"
-
     common(project(path: ':common', configuration: 'namedElements')) { transitive false }
     shadowBundle project(path: ':common', configuration: 'transformProductionFabric')
 }
 
 processResources {
     inputs.property 'version', project.version
-    inputs.property 'mc_version', project.minecraft_version
-    inputs.property 'architectury_version', project.architectury_api_version
+    inputs.property 'mc_version_range', project.fabric_game_version_range
 
     filesMatching('fabric.mod.json') {
         expand (
                 version: project.version,
-                mc_version: project.minecraft_version,
-                architectury_version: project.architectury_api_version,
+                mc_version_range: project.fabric_game_version_range,
         )
     }
 }
@@ -56,6 +52,7 @@ processResources {
 shadowJar {
     configurations = [project.configurations.shadowBundle]
     archiveClassifier = 'dev-shadow'
+    exclude "architectury.common.json"
 }
 
 remapJar {
