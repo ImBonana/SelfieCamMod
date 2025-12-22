@@ -23,7 +23,6 @@
   "mixins": [
     "selfiecam.mixins.json"
   ],
-  "accessWidener": "selfiecam.accesswidener",
   "depends": {
     "fabricloader": "${loader_version_range}",
     "minecraft": "${mc_version_range}",
