@@ -8,11 +8,11 @@ import com.mojang.blaze3d.platform.Window;
 import me.imbanana.selfiecam.ModCamera;
 import me.imbanana.selfiecam.SelfiecamClient;
 import me.imbanana.selfiecam.gui.CameraControlsScreen;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.input.MouseButtonInfo;
+import net.minecraft.util.Util;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 import org.spongepowered.asm.mixin.Mixin;
@@ -33,9 +33,6 @@ public abstract class MouseHandlerMixin {
     protected abstract MouseButtonInfo simulateRightClick(MouseButtonInfo mouseButtonInfo, boolean bl);
 
     @Shadow
-    protected long lastClickTime;
-
-    @Shadow
     protected int lastClickButton;
 
     @Shadow
@@ -49,6 +46,10 @@ public abstract class MouseHandlerMixin {
 
     @Shadow
     private double mousePressedTime;
+
+    @Shadow
+    @Nullable
+    private MouseHandler.LastClick lastClick;
 
     @Inject(
            method = "onScroll",
@@ -111,9 +112,10 @@ public abstract class MouseHandlerMixin {
 
         if (i == 1) {
             long currentTime = Util.getMillis();
-            boolean isQuickClick = currentTime - this.lastClickTime < 250L && this.lastClickButton == mouseButtonEvent.button();
+
+            boolean isQuickClick = this.lastClick != null && currentTime - this.lastClick.time() < 250L && this.lastClickButton == mouseButtonEvent.button();
             if (screen.mouseClicked(mouseButtonEvent, isQuickClick)) {
-                this.lastClickTime = currentTime;
+                this.lastClick = new MouseHandler.LastClick(currentTime, lastClick.screen());
                 this.lastClickButton = buttonInfo.button();
             }
         } else {

@@ -17,7 +17,7 @@ modUrl = "https://modrinth.com/project/selfiecam"
 [[dependencies.selfiecam]]
 modId = "neoforge"
 type = "required"
-versionRange = "[21,)"
+versionRange = "${loader_version_range}"
 ordering = "NONE"
 side = "CLIENT"
 

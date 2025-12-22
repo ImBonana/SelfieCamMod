@@ -25,7 +25,7 @@
   ],
   "accessWidener": "selfiecam.accesswidener",
   "depends": {
-    "fabricloader": ">=0.18.1",
+    "fabricloader": "${loader_version_range}",
     "minecraft": "${mc_version_range}",
     "java": ">=21",
     "fabric-api": "*"

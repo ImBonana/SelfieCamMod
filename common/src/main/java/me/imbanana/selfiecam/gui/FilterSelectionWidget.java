@@ -1,6 +1,5 @@
 package me.imbanana.selfiecam.gui;
 
-import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import me.imbanana.selfiecam.ModShaders;
 import me.imbanana.selfiecam.SelfiecamClient;
 import net.minecraft.client.Minecraft;
@@ -12,8 +11,9 @@ import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
+import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class FilterSelectionWidget extends AbstractContainerWidget {
                 )
         );
 
-        for (ResourceLocation shader : ModShaders.SHADERS) {
+        for (Identifier shader : ModShaders.SHADERS) {
             this.addEntry(
                     new FilterEntry(
                             Component.translatable("filter.selfiecam." + shader.getPath()),
@@ -122,16 +122,16 @@ public class FilterSelectionWidget extends AbstractContainerWidget {
     }
 
     class FilterEntry extends Button {
-        private final ResourceLocation shader;
+        private final Identifier shader;
 
-        protected FilterEntry(Component message, ResourceLocation shader) {
+        protected FilterEntry(Component message, Identifier shader) {
             super(0, 0, FilterSelectionWidget.this.getContentWidth(), 20, message, button -> {}, Supplier::get);
 
             this.shader = shader;
         }
 
         @Override
-        protected void renderWidget(GuiGraphics guiGraphics, int i, int j, float f) {
+        protected void renderContents(GuiGraphics guiGraphics, int i, int j, float f) {
             Minecraft minecraft = Minecraft.getInstance();
             guiGraphics.blitSprite(
                     RenderPipelines.GUI_TEXTURED,
@@ -157,10 +157,7 @@ public class FilterSelectionWidget extends AbstractContainerWidget {
             }
 
             int k = ARGB.color(this.alpha, this.active ? -1 : -6250336);
-            this.renderString(guiGraphics, minecraft.font, k);
-            if (this.isHovered()) {
-                guiGraphics.requestCursor(this.isActive() ? CursorTypes.POINTING_HAND : CursorTypes.NOT_ALLOWED);
-            }
+            guiGraphics.drawCenteredString(minecraft.font, this.message, this.getX() + this.width / 2, this.getY() + this.height / 2 - minecraft.font.lineHeight / 2, k);
         }
 
         @Override

@@ -1,6 +1,5 @@
 package me.imbanana.selfiecam.mixin;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import me.imbanana.selfiecam.SelfiecamClient;
 import net.minecraft.world.entity.Avatar;

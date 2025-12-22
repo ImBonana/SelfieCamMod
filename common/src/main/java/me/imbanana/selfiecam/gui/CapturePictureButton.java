@@ -39,7 +39,7 @@ public class CapturePictureButton extends Button {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int i, int j, float f) {
+    protected void renderContents(GuiGraphics guiGraphics, int i, int j, float f) {
         guiGraphics.blitSprite(
                 RenderPipelines.GUI_TEXTURED,
                 SelfiecamClient.idOf("widget/capture_button" + (this.isHoveredOrFocused() ? "_highlight" : "")),
@@ -49,10 +49,6 @@ public class CapturePictureButton extends Button {
                 this.getHeight(),
                 ARGB.white(this.alpha)
         );
-
-        if (this.isHovered()) {
-            guiGraphics.requestCursor(this.isActive() ? CursorTypes.POINTING_HAND : CursorTypes.NOT_ALLOWED);
-        }
     }
 
     public void setCaptureHeight(int captureHeight) {

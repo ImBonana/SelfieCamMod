@@ -1,7 +1,7 @@
 package me.imbanana.selfiecam;
 
 import me.imbanana.selfiecam.gui.CameraControlsScreen;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +34,7 @@ public final class SelfiecamClient {
         return cameraControlsScreen;
     }
 
-    public static ResourceLocation idOf(String path) {
-        return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+    public static Identifier idOf(String path) {
+        return Identifier.fromNamespaceAndPath(MOD_ID, path);
     }
 }

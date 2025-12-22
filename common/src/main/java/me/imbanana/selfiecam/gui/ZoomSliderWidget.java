@@ -2,13 +2,14 @@ package me.imbanana.selfiecam.gui;
 
 import me.imbanana.selfiecam.SelfiecamClient;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ActiveTextCollector;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 
@@ -206,13 +207,13 @@ public class ZoomSliderWidget extends AbstractSliderButton {
         guiGraphics.drawString(minecraft.font, "+", this.getX() - minecraft.font.width("+") - 5, (int) (this.getY() + minecraft.font.lineHeight / 1.5), -1);
         guiGraphics.drawString(minecraft.font, "-", this.getX() + this.getWidth() + 5, (int) (this.getY() + minecraft.font.lineHeight / 1.5), -1);
 
-        ResourceLocation sprite = this.isActive() && this.isFocused() && !this.canChangeValue ? SelfiecamClient.idOf("widget/slider") : SelfiecamClient.idOf("widget/slider_highlight");
-        ResourceLocation handleSprite = !this.isActive() || !this.isHovered && !this.canChangeValue ? SelfiecamClient.idOf("widget/slider_handle") : SelfiecamClient.idOf("widget/slider_handle_highlight");
+        Identifier sprite = this.isActive() && this.isFocused() && !this.canChangeValue ? SelfiecamClient.idOf("widget/slider") : SelfiecamClient.idOf("widget/slider_highlight");
+        Identifier handleSprite = !this.isActive() || !this.isHovered && !this.canChangeValue ? SelfiecamClient.idOf("widget/slider_handle") : SelfiecamClient.idOf("widget/slider_handle_highlight");
 
         guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, this.getX(), this.getY() + this.getHeight() / 4, this.getWidth(), this.getHeight() / 2, ARGB.white(this.alpha));
         guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, handleSprite, this.getX() + (int) (this.value * (double) (this.width - 8)), this.getY(), 8, this.getHeight(), ARGB.white(this.alpha));
 
         int i = this.active ? 16777215 : 10526880;
-        this.renderScrollingString(guiGraphics, minecraft.font, 2, i | Mth.ceil(this.alpha * 255.0F) << 24);
+        this.renderScrollingStringOverContents(guiGraphics.textRendererForWidget(this, GuiGraphics.HoveredTextEffects.NONE), message.copy().withColor(i), 2);
     }
 }

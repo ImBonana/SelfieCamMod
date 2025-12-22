@@ -1,7 +1,9 @@
 accessWidener   v2  named
 
-accessible method net/minecraft/client/gui/components/AbstractSliderButton getSprite ()Lnet/minecraft/resources/ResourceLocation;
-accessible method net/minecraft/client/gui/components/AbstractSliderButton getHandleSprite ()Lnet/minecraft/resources/ResourceLocation;
-accessible method net/minecraft/client/renderer/GameRenderer setPostEffect (Lnet/minecraft/resources/ResourceLocation;)V
+accessible class net/minecraft/client/MouseHandler$LastClick
+
+accessible method net/minecraft/client/gui/components/AbstractSliderButton getSprite ()Lnet/minecraft/resources/Identifier;
+accessible method net/minecraft/client/gui/components/AbstractSliderButton getHandleSprite ()Lnet/minecraft/resources/Identifier;
+accessible method net/minecraft/client/renderer/GameRenderer setPostEffect (Lnet/minecraft/resources/Identifier;)V
 
 accessible field net/minecraft/client/gui/components/AbstractSliderButton canChangeValue Z

@@ -9,6 +9,7 @@ import me.imbanana.selfiecam.SelfiecamClient;
 import net.minecraft.client.Camera;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.waypoints.TrackedWaypoint;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -23,7 +24,7 @@ public abstract class CameraMixin implements TrackedWaypoint.Camera {
                     value = "TAIL"
             )
     )
-    private void injectSetup(BlockGetter blockGetter, Entity entity, boolean bl, boolean bl2, float f, CallbackInfo ci) {
+    private void injectSetup(Level level, Entity entity, boolean bl, boolean bl2, float f, CallbackInfo ci) {
         if(SelfiecamClient.getCameraController().isInSelfieMode() && !bl) {
             SelfiecamClient.getCameraController().handleCamera((CameraAccessor) this);
         }
