@@ -2,10 +2,8 @@ package me.imbanana.selfiecam.gui;
 
 import me.imbanana.selfiecam.ModCamera;
 import me.imbanana.selfiecam.SelfiecamClient;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.AbstractContainerEventHandler;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -134,15 +132,11 @@ public class CameraControlsScreen extends AbstractContainerEventHandler {
         }
     }
 
-    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
-        guiGraphics.nextStratum();
+    // This replaces render
+    public void extractRenderState(final GuiGraphicsExtractor graphics, final int mouseX, final int mouseY, final float a) {
+        renderables.forEach(renderable -> renderable.extractRenderState(graphics, mouseX, mouseY, a));
 
-        int xPos = (int) Minecraft.getInstance().mouseHandler.getScaledXPos(Minecraft.getInstance().getWindow());
-        int yPos = (int) Minecraft.getInstance().mouseHandler.getScaledYPos(Minecraft.getInstance().getWindow());
-
-        renderables.forEach(renderable -> renderable.render(guiGraphics, xPos, yPos, deltaTracker.getGameTimeDeltaPartialTick(false)));
-
-        guiGraphics.renderDeferredElements();
+        graphics.extractDeferredElements(mouseX, mouseY, a);
     }
 
     public void resize(int width, int height) {

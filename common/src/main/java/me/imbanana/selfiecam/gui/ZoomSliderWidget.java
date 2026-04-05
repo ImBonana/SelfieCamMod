@@ -2,8 +2,7 @@ package me.imbanana.selfiecam.gui;
 
 import me.imbanana.selfiecam.SelfiecamClient;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ActiveTextCollector;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -200,20 +199,20 @@ public class ZoomSliderWidget extends AbstractSliderButton {
     protected void applyValue() {}
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         Minecraft minecraft = Minecraft.getInstance();
 
-        guiGraphics.drawCenteredString(minecraft.font, Component.translatable("gui.selfiecam.camera.zoom"), this.getX() + this.getWidth() / 2, this.getY() - minecraft.font.lineHeight, -1);
-        guiGraphics.drawString(minecraft.font, "+", this.getX() - minecraft.font.width("+") - 5, (int) (this.getY() + minecraft.font.lineHeight / 1.5), -1);
-        guiGraphics.drawString(minecraft.font, "-", this.getX() + this.getWidth() + 5, (int) (this.getY() + minecraft.font.lineHeight / 1.5), -1);
+        graphics.centeredText(minecraft.font, Component.translatable("gui.selfiecam.camera.zoom"), this.getX() + this.getWidth() / 2, this.getY() - minecraft.font.lineHeight, -1);
+        graphics.text(minecraft.font, "+", this.getX() - minecraft.font.width("+") - 5, (int) (this.getY() + minecraft.font.lineHeight / 1.5), -1);
+        graphics.text(minecraft.font, "-", this.getX() + this.getWidth() + 5, (int) (this.getY() + minecraft.font.lineHeight / 1.5), -1);
 
         Identifier sprite = this.isActive() && this.isFocused() && !this.canChangeValue ? SelfiecamClient.idOf("widget/slider") : SelfiecamClient.idOf("widget/slider_highlight");
         Identifier handleSprite = !this.isActive() || !this.isHovered && !this.canChangeValue ? SelfiecamClient.idOf("widget/slider_handle") : SelfiecamClient.idOf("widget/slider_handle_highlight");
 
-        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, this.getX(), this.getY() + this.getHeight() / 4, this.getWidth(), this.getHeight() / 2, ARGB.white(this.alpha));
-        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, handleSprite, this.getX() + (int) (this.value * (double) (this.width - 8)), this.getY(), 8, this.getHeight(), ARGB.white(this.alpha));
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, this.getX(), this.getY() + this.getHeight() / 4, this.getWidth(), this.getHeight() / 2, ARGB.white(this.alpha));
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, handleSprite, this.getX() + (int) (this.value * (double) (this.width - 8)), this.getY(), 8, this.getHeight(), ARGB.white(this.alpha));
 
         int i = this.active ? 16777215 : 10526880;
-        this.renderScrollingStringOverContents(guiGraphics.textRendererForWidget(this, GuiGraphics.HoveredTextEffects.NONE), message.copy().withColor(i), 2);
+        this.extractScrollingStringOverContents(graphics.textRendererForWidget(this, GuiGraphicsExtractor.HoveredTextEffects.NONE), message.copy().withColor(i), 2);
     }
 }

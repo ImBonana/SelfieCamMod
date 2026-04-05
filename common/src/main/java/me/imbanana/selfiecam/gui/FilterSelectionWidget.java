@@ -3,7 +3,7 @@ package me.imbanana.selfiecam.gui;
 import me.imbanana.selfiecam.ModShaders;
 import me.imbanana.selfiecam.SelfiecamClient;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -13,7 +13,6 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
-import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -23,8 +22,8 @@ import java.util.function.Supplier;
 public class FilterSelectionWidget extends AbstractContainerWidget {
     private final List<FilterEntry> entries = new ArrayList<>();
 
-    public FilterSelectionWidget(int i, int j, int k, int l) {
-        super(i, j, k, l, Component.literal("Filter Selection"));
+    public FilterSelectionWidget(int x, int y, int width, int height) {
+        super(x, y, width, height, Component.literal("Filter Selection"), AbstractScrollArea.defaultSettings(10));
 
         this.addEntry(
                 new FilterEntry(
@@ -66,6 +65,21 @@ public class FilterSelectionWidget extends AbstractContainerWidget {
     }
 
     @Override
+    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        this.extractScrollbar(graphics, mouseX, mouseY);
+
+        graphics.enableScissor(this.getX(), this.getY(), this.getRight(), this.getBottom());
+
+        entries.forEach(entry -> {
+            if (entry.getY() + entry.getHeight() >= this.getY() && entry.getY() <= this.getBottom()) {
+                entry.extractRenderState(graphics, mouseX, mouseY, a);
+            }
+        });
+
+        graphics.disableScissor();
+    }
+
+    @Override
     public boolean mouseClicked(MouseButtonEvent mouseButtonEvent, boolean bl) {
         return super.mouseClicked(mouseButtonEvent, bl);
     }
@@ -73,21 +87,6 @@ public class FilterSelectionWidget extends AbstractContainerWidget {
     @Override
     protected double scrollRate() {
         return 10.0;
-    }
-
-    @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int i, int j, float f) {
-        this.renderScrollbar(guiGraphics, i, j);
-
-        guiGraphics.enableScissor(this.getX(), this.getY(), this.getRight(), this.getBottom());
-
-        entries.forEach(entry -> {
-            if (entry.getY() + entry.getHeight() >= this.getY() && entry.getY() <= this.getBottom()) {
-                entry.render(guiGraphics, i, j, f);
-            }
-        });
-
-        guiGraphics.disableScissor();
     }
 
     private int getContentWidth() {
@@ -131,9 +130,9 @@ public class FilterSelectionWidget extends AbstractContainerWidget {
         }
 
         @Override
-        protected void renderContents(GuiGraphics guiGraphics, int i, int j, float f) {
+        protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
             Minecraft minecraft = Minecraft.getInstance();
-            guiGraphics.blitSprite(
+            graphics.blitSprite(
                     RenderPipelines.GUI_TEXTURED,
 //                    SPRITES.get(this.active, this.isHoveredOrFocused()),
                     SelfiecamClient.idOf("widget/filter/" + (shader == null ? "normal" : shader.getPath())),
@@ -145,7 +144,7 @@ public class FilterSelectionWidget extends AbstractContainerWidget {
             );
 
             if (this.isHoveredOrFocused()) {
-                guiGraphics.blitSprite(
+                graphics.blitSprite(
                         RenderPipelines.GUI_TEXTURED,
                         SelfiecamClient.idOf("widget/filter_button_highlight"),
                         this.getX(),
@@ -157,7 +156,7 @@ public class FilterSelectionWidget extends AbstractContainerWidget {
             }
 
             int k = ARGB.color(this.alpha, this.active ? -1 : -6250336);
-            guiGraphics.drawCenteredString(minecraft.font, this.message, this.getX() + this.width / 2, this.getY() + this.height / 2 - minecraft.font.lineHeight / 2, k);
+            graphics.centeredText(minecraft.font, this.message, this.getX() + this.width / 2, this.getY() + this.height / 2 - minecraft.font.lineHeight / 2, k);
         }
 
         @Override

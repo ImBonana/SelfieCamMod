@@ -1,7 +1,6 @@
 package me.imbanana.selfiecam.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import me.imbanana.selfiecam.ModCamera;
 import me.imbanana.selfiecam.SelfiecamClient;
 import net.minecraft.client.gui.components.toasts.ToastManager;
 import org.objectweb.asm.Opcodes;
@@ -11,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(ToastManager.class)
 public abstract class ToastManagerMixin {
     @ModifyExpressionValue(
-            method = "render",
+            method = "extractRenderState",
             at = @At(
                     value = "FIELD",
                     target = "Lnet/minecraft/client/Options;hideGui:Z",

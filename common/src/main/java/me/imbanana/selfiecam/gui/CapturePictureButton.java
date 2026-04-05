@@ -1,8 +1,7 @@
 package me.imbanana.selfiecam.gui;
 
-import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import me.imbanana.selfiecam.SelfiecamClient;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.input.InputWithModifiers;
@@ -39,8 +38,8 @@ public class CapturePictureButton extends Button {
     }
 
     @Override
-    protected void renderContents(GuiGraphics guiGraphics, int i, int j, float f) {
-        guiGraphics.blitSprite(
+    protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        graphics.blitSprite(
                 RenderPipelines.GUI_TEXTURED,
                 SelfiecamClient.idOf("widget/capture_button" + (this.isHoveredOrFocused() ? "_highlight" : "")),
                 this.getX(),

@@ -5,7 +5,7 @@ import com.mojang.blaze3d.platform.cursor.CursorType;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import me.imbanana.selfiecam.SelfiecamClient;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -63,10 +63,10 @@ public class RatioSelectionWidget extends AbstractWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int i, int j, float f) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         Minecraft minecraft = Minecraft.getInstance();
 
-        guiGraphics.blitSprite(
+        graphics.blitSprite(
                 RenderPipelines.GUI_TEXTURED,
                 SelfiecamClient.idOf("widget/ratio_selection"),
                 this.getX(),
@@ -77,34 +77,34 @@ public class RatioSelectionWidget extends AbstractWidget {
 
         int backgroundColor = ARGB.color(127, 0, 0,0);
 
-        guiGraphics.fill(0, 0, guiGraphics.guiWidth(), this.getY(), backgroundColor);
-        guiGraphics.fill(0, this.getBottom(), guiGraphics.guiWidth(), guiGraphics.guiHeight(), backgroundColor);
-        guiGraphics.fill(0, this.getY(), this.getX(), this.getBottom(), backgroundColor);
-        guiGraphics.fill(this.getRight(), this.getY(), guiGraphics.guiWidth(), this.getBottom(), backgroundColor);
+        graphics.fill(0, 0, graphics.guiWidth(), this.getY(), backgroundColor);
+        graphics.fill(0, this.getBottom(), graphics.guiWidth(), graphics.guiHeight(), backgroundColor);
+        graphics.fill(0, this.getY(), this.getX(), this.getBottom(), backgroundColor);
+        graphics.fill(this.getRight(), this.getY(), graphics.guiWidth(), this.getBottom(), backgroundColor);
 
-        guiGraphics.pose().pushMatrix();
-        guiGraphics.pose().rotateAbout((float) (Math.PI / 2f), this.getX(), this.getY());
+        graphics.pose().pushMatrix();
+        graphics.pose().rotateAbout((float) (Math.PI / 2f), this.getX(), this.getY());
         String heightText = String.valueOf(this.getFrameBufferHeight());
         int heightTextX = this.getX() + (this.height - minecraft.font.width(heightText)) / 2;
         int heightTextY = this.getY() - minecraft.font.lineHeight - 2;
-        guiGraphics.drawString(minecraft.font, heightText, heightTextX, heightTextY, -1);
-        guiGraphics.pose().popMatrix();
+        graphics.text(minecraft.font, heightText, heightTextX, heightTextY, -1);
+        graphics.pose().popMatrix();
 
         String widthText = String.valueOf(this.getFrameBufferWidth());
         int widthTextX = this.getX() + (this.width - minecraft.font.width(heightText)) / 2;
         int widthTextY = this.getY() + 3;
-        guiGraphics.drawString(minecraft.font, widthText, widthTextX, widthTextY, -1);
+        graphics.text(minecraft.font, widthText, widthTextX, widthTextY, -1);
 
-        ResizeMode availableResizeMode = this.resizeMode == ResizeMode.NONE ? getAvailableMode(i, j) : this.resizeMode;
+        ResizeMode availableResizeMode = this.resizeMode == ResizeMode.NONE ? getAvailableMode(mouseX, mouseY) : this.resizeMode;
 
         if (availableResizeMode == ResizeMode.HORIZONTAL) {
-            guiGraphics.requestCursor(CursorTypes.RESIZE_EW);
+            graphics.requestCursor(CursorTypes.RESIZE_EW);
         } else if (availableResizeMode == ResizeMode.VERTICAL) {
-            guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
+            graphics.requestCursor(CursorTypes.RESIZE_NS);
         } else if (availableResizeMode == ResizeMode.NORTH_WEST) {
-            guiGraphics.requestCursor(CursorType.createStandardCursor(GLFW.GLFW_RESIZE_NWSE_CURSOR, "resize_nwse", CursorType.DEFAULT));
+            graphics.requestCursor(CursorType.createStandardCursor(GLFW.GLFW_RESIZE_NWSE_CURSOR, "resize_nwse", CursorType.DEFAULT));
         } else if (availableResizeMode == ResizeMode.NORTH_EAST) {
-            guiGraphics.requestCursor(CursorType.createStandardCursor(GLFW.GLFW_RESIZE_NESW_CURSOR, "resize_nesw", CursorType.DEFAULT));
+            graphics.requestCursor(CursorType.createStandardCursor(GLFW.GLFW_RESIZE_NESW_CURSOR, "resize_nesw", CursorType.DEFAULT));
         }
     }
 

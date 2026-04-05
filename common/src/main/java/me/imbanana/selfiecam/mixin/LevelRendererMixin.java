@@ -1,7 +1,6 @@
 package me.imbanana.selfiecam.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import me.imbanana.selfiecam.ModCamera;
 import me.imbanana.selfiecam.SelfiecamClient;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;

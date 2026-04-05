@@ -12,7 +12,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.thread.ReentrantBlockableEventLoop;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.HumanoidArm;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -32,12 +31,12 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
     @Nullable
     public LocalPlayer player;
 
-    public MinecraftMixin(String string) {
-        super(string);
+    public MinecraftMixin(String name, boolean propagatesCrashes) {
+        super(name, propagatesCrashes);
     }
 
     @Inject(
-            method = "resizeDisplay()V",
+            method = "resizeGui()V",
             at = @At(
                     value = "INVOKE",
                     target = "Lcom/mojang/blaze3d/platform/Window;setGuiScale(I)V",

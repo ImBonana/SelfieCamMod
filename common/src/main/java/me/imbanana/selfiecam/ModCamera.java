@@ -62,7 +62,6 @@ public class ModCamera {
 
         camera.selfieCam$setRotation(finalYRot, finalXRot);
         camera.selfieCam$move(-camera.selfieCam$getMaxZoom((float) calcZoom(this.zoomPercentage)), 0, 0);
-
     }
 
     public void handleMouseScroll(Vector2i scroll) {
@@ -88,6 +87,8 @@ public class ModCamera {
 
         try {
             this.shouldHideGUI = true;
+            minecraft.gameRenderer.update(DeltaTracker.ONE, true);
+            minecraft.gameRenderer.extract(DeltaTracker.ONE, true);
             minecraft.gameRenderer.render(DeltaTracker.ONE, true);
 
             GpuTexture gpuTexture = renderTarget.getColorTexture();
@@ -115,7 +116,7 @@ public class ModCamera {
                         try {
                             nativeImage.writeToFile(picFile);
                             minecraft.execute(() ->
-                                    minecraft.gui.getChat().addMessage(
+                                    minecraft.gui.getChat().addClientSystemMessage(
                                             Component.literal(picFile.getName())
                                                     .withStyle(ChatFormatting.UNDERLINE)
                                                     .withStyle(style ->
