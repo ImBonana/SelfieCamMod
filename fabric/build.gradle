@@ -1,3 +1,6 @@
+import groovy.json.JsonSlurper
+import groovy.json.JsonOutput
+
 architectury {
     platformSetupLoomIde()
     fabric()
@@ -27,5 +30,19 @@ processResources {
                 mc_version_range: project.fabric_game_version_range,
                 loader_version_range: project.fabric_loader_version_range
         )
+    }
+
+    doLast {
+        def modJson = new File(outputs.files.asPath + "/fabric.mod.json")
+        if (modJson.exists()) {
+            def json = new JsonSlurper().parse(modJson)
+            if (!json.containsKey("accessWidener")) {
+                def awPath = project(":common").loom.accessWidenerPath
+                if (awPath != null) {
+                    json["accessWidener"] = awPath.get().asFile.name
+                    modJson.text = JsonOutput.prettyPrint(JsonOutput.toJson(json))
+                }
+            }
+        }
     }
 }
