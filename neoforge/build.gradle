@@ -3,6 +3,10 @@ architectury {
     neoForge()
 }
 
+configurations {
+    developmentNeoForge.extendsFrom common
+}
+
 repositories {
     maven {
         name = 'NeoForged'
