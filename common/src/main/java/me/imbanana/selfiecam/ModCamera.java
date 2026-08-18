@@ -1,6 +1,7 @@
 package me.imbanana.selfiecam;
 
 import com.mojang.blaze3d.buffers.GpuBuffer;
+import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.CommandEncoder;
@@ -79,7 +80,7 @@ public class ModCamera {
 
     public void takePic(int width, int height) {
         Minecraft minecraft = Minecraft.getInstance();
-        RenderTarget renderTarget = minecraft.getMainRenderTarget();
+        RenderTarget renderTarget = minecraft.gameRenderer.mainRenderTarget();
 
 
         int startX = (renderTarget.width - width) / 2;
@@ -87,23 +88,22 @@ public class ModCamera {
 
         try {
             this.shouldHideGUI = true;
-            minecraft.gameRenderer.update(DeltaTracker.ONE, true);
+            minecraft.gameRenderer.update(DeltaTracker.ONE);
             minecraft.gameRenderer.extract(DeltaTracker.ONE, true);
             minecraft.gameRenderer.render(DeltaTracker.ONE, true);
 
             GpuTexture gpuTexture = renderTarget.getColorTexture();
 
             if (gpuTexture == null) throw new IllegalStateException("Tried to capture screenshot of an incomplete framebuffer");
-            GpuBuffer gpuBuffer = RenderSystem.getDevice().createBuffer(() -> "Picture Buffer",9, renderTarget.width * renderTarget.height * gpuTexture.getFormat().pixelSize());
+            GpuBuffer gpuBuffer = RenderSystem.getDevice().createBuffer(() -> "Picture Buffer",9, (long) renderTarget.width * renderTarget.height * gpuTexture.getFormat().blockSize());
 
-            CommandEncoder commandEncoder = RenderSystem.getDevice().createCommandEncoder();
             RenderSystem.getDevice().createCommandEncoder().copyTextureToBuffer(gpuTexture, gpuBuffer, 0, () -> {
-                try (GpuBuffer.MappedView mappedView = commandEncoder.mapBuffer(gpuBuffer, true, false)) {
+                try (GpuBufferSlice.MappedView mappedView = gpuBuffer.map(true, false)) {
                     NativeImage nativeImage = new NativeImage(width, height, false);
 
                     for (int y = 0; y < height; y++) {
                         for (int x = 0; x < width; x++) {
-                            int color = mappedView.data().getInt((startX + x + (startY + y) * renderTarget.width) * gpuTexture.getFormat().pixelSize());
+                            int color = mappedView.data().getInt((startX + x + (startY + y) * renderTarget.width) * gpuTexture.getFormat().blockSize());
                             nativeImage.setPixelABGR(x, height - y - 1, color | 0xFF000000);
                         }
                     }
@@ -116,7 +116,7 @@ public class ModCamera {
                         try {
                             nativeImage.writeToFile(picFile);
                             minecraft.execute(() ->
-                                    minecraft.gui.getChat().addClientSystemMessage(
+                                    minecraft.showDebugChat(
                                             Component.literal(picFile.getName())
                                                     .withStyle(ChatFormatting.UNDERLINE)
                                                     .withStyle(style ->

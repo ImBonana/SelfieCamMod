@@ -56,7 +56,7 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
             method = "tick()V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/gui/components/DebugScreenOverlay;showDebugScreen()Z"
+                    target = "Lnet/minecraft/client/gui/Gui;overlay()Lnet/minecraft/client/gui/screens/Overlay;"
             )
     )
     private void tickCameraControls(CallbackInfo ci) {

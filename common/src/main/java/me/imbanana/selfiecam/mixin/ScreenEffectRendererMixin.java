@@ -9,13 +9,13 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 @Mixin(ScreenEffectRenderer.class)
 public abstract class ScreenEffectRendererMixin {
     @ModifyVariable(
-            method = "renderScreenEffect",
+            method = "submit",
             at = @At("HEAD"),
             argsOnly = true,
             ordinal = 2
     )
 
-    private boolean checkSelfieCameraOutline(boolean original) {
+    private boolean hideHudWhenInCamera(boolean original) {
         return original || SelfiecamClient.getCameraController().isInSelfieMode();
     }
 }

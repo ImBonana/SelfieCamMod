@@ -42,9 +42,9 @@ public class CameraControlsScreen extends AbstractContainerEventHandler {
 
     public boolean isEnabled() {
         return this.isEnabled
-                && !Minecraft.getInstance().options.hideGui
-                && !(Minecraft.getInstance().screen instanceof GameModeSwitcherScreen)
-                && !(Minecraft.getInstance().screen instanceof PauseScreen);
+                && !Minecraft.getInstance().gui.hud.isHidden()
+                && !(Minecraft.getInstance().gui.screen() instanceof GameModeSwitcherScreen)
+                && !(Minecraft.getInstance().gui.screen() instanceof PauseScreen);
     }
 
     private void init() {

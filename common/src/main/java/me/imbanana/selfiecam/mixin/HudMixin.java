@@ -4,8 +4,8 @@ import com.mojang.blaze3d.platform.Window;
 import me.imbanana.selfiecam.SelfiecamClient;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.Hud;
 import net.minecraft.client.gui.screens.LevelLoadingScreen;
 import net.minecraft.util.Mth;
 import org.spongepowered.asm.mixin.Final;
@@ -15,8 +15,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(Gui.class)
-public abstract class GuiMixin {
+@Mixin(Hud.class)
+public abstract class HudMixin {
     @Shadow
     @Final
     private Minecraft minecraft;
@@ -24,13 +24,16 @@ public abstract class GuiMixin {
     @Shadow
     protected abstract void extractChat(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker);
 
+    @Shadow
+    public abstract boolean isHidden();
+
     @Inject(
             method = "extractRenderState",
             at = @At("HEAD"),
             cancellable = true
     )
     private void checkSelfieMode(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        if (this.minecraft.screen instanceof LevelLoadingScreen) return;
+        if (this.minecraft.gui.screen() instanceof LevelLoadingScreen) return;
         if (SelfiecamClient.getCameraController().shouldHideGUI()) {
             ci.cancel();
             return;
@@ -50,7 +53,7 @@ public abstract class GuiMixin {
              ci.cancel();
 
              // keep the chat
-             if (!this.minecraft.options.hideGui) {
+             if (!this.isHidden()) {
                  this.extractChat(graphics, deltaTracker);
              }
         }

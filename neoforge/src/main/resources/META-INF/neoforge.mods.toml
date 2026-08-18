@@ -11,7 +11,7 @@ authors = "ImBanana"
 description = '''
 A mod that add a selfie camera
 '''
-logoFile = "assets/selfiecam/icon.png"
+iconFile = "assets/selfiecam/icon.png"
 modUrl = "https://modrinth.com/project/selfiecam"
 
 [[dependencies.selfiecam]]

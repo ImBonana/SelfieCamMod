@@ -25,9 +25,8 @@ public abstract class GameRendererMixin implements TrackedWaypoint.Projector, Au
     @ModifyExpressionValue(
             method = "shouldRenderBlockOutline",
             at = @At(
-                    value = "FIELD",
-                    target = "Lnet/minecraft/client/Options;hideGui:Z",
-                    opcode = Opcodes.GETFIELD
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/gui/Hud;isHidden()Z"
             )
     )
     private boolean checkSelfieCameraOutline(boolean original) {
