@@ -12,7 +12,7 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ARGB;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
 
 public class RatioSelectionWidget extends AbstractWidget {
     private int screenWidth;
@@ -102,9 +102,9 @@ public class RatioSelectionWidget extends AbstractWidget {
         } else if (availableResizeMode == ResizeMode.VERTICAL) {
             graphics.requestCursor(CursorTypes.RESIZE_NS);
         } else if (availableResizeMode == ResizeMode.NORTH_WEST) {
-            graphics.requestCursor(CursorType.createStandardCursor(GLFW.GLFW_RESIZE_NWSE_CURSOR, "resize_nwse", CursorType.DEFAULT));
+            graphics.requestCursor(CursorType.createStandardCursor(SDLMouse.SDL_SYSTEM_CURSOR_NWSE_RESIZE, "resize_nwse", CursorType.DEFAULT));
         } else if (availableResizeMode == ResizeMode.NORTH_EAST) {
-            graphics.requestCursor(CursorType.createStandardCursor(GLFW.GLFW_RESIZE_NESW_CURSOR, "resize_nesw", CursorType.DEFAULT));
+            graphics.requestCursor(CursorType.createStandardCursor(SDLMouse.SDL_SYSTEM_CURSOR_NESW_RESIZE, "resize_nesw", CursorType.DEFAULT));
         }
     }
 

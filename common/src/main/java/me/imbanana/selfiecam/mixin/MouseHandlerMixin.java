@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.Window;
 import me.imbanana.selfiecam.ModCamera;
 import me.imbanana.selfiecam.SelfiecamClient;
@@ -28,9 +29,6 @@ public abstract class MouseHandlerMixin {
 
     @Shadow
     public abstract double getScaledYPos(Window window);
-
-    @Shadow
-    protected abstract MouseButtonInfo simulateRightClick(MouseButtonInfo mouseButtonInfo, boolean bl);
 
     @Shadow
     protected int lastClickButton;
@@ -59,14 +57,14 @@ public abstract class MouseHandlerMixin {
             ),
             cancellable = true
     )
-    private void injectOnScroll(long l, double d, double e, CallbackInfo ci, @Local Vector2i scroll, @Local(ordinal = 3) double scrollX, @Local(ordinal = 4) double scrollY) {
+    private void injectOnScroll(long handle, double xoffset, double yoffset, CallbackInfo ci, @Local Vector2i wheelXY, @Local(ordinal = 3) double scaledXOffset, @Local(ordinal = 4) double scaledYOffset) {
         Window window = Minecraft.getInstance().getWindow();
 
         ModCamera cameraController = SelfiecamClient.getCameraController();
         CameraControlsScreen screen = SelfiecamClient.getCameraControlsGui();
 
         if (cameraController.isInSelfieMode() && (!screen.isEnabled() || !screen.canInteract())) {
-            cameraController.handleMouseScroll(scroll);
+            cameraController.handleMouseScroll(wheelXY);
             ci.cancel();
         }
 
@@ -74,7 +72,7 @@ public abstract class MouseHandlerMixin {
             double mouseX = this.getScaledXPos(window);
             double mouseY = this.getScaledYPos(window);
 
-            screen.mouseScrolled(mouseX, mouseY, scrollX, scrollY) ;
+            screen.mouseScrolled(mouseX, mouseY, scaledXOffset, scaledYOffset) ;
         }
     }
 
@@ -95,9 +93,9 @@ public abstract class MouseHandlerMixin {
             method = "onButton",
             at = @At("TAIL")
     )
-    private void checkCameraControlsOverlayMouseButton(long l, MouseButtonInfo mouseButtonInfo, int i, CallbackInfo ci) {
+    private void checkCameraControlsOverlayMouseButton(long handle, MouseButtonInfo rawButtonInfo, int action, CallbackInfo ci) {
         Window window = Minecraft.getInstance().getWindow();
-        if (window.handle() != l) return;
+        if (window.handle() != handle) return;
 
         CameraControlsScreen screen = SelfiecamClient.getCameraControlsGui();
         if (!screen.isEnabled()) return;
@@ -106,17 +104,15 @@ public abstract class MouseHandlerMixin {
         double mouseX = this.getScaledXPos(window);
         double mouseY = this.getScaledYPos(window);
 
-        MouseButtonInfo buttonInfo = this.simulateRightClick(mouseButtonInfo, i == 1);
+        MouseButtonEvent mouseButtonEvent = new MouseButtonEvent(mouseX, mouseY, rawButtonInfo);
 
-        MouseButtonEvent mouseButtonEvent = new MouseButtonEvent(mouseX, mouseY, buttonInfo);
-
-        if (i == 1) {
+        if (action == InputConstants.PRESS) {
             long currentTime = Util.getMillis();
 
             boolean isQuickClick = this.lastClick != null && currentTime - this.lastClick.time() < 250L && this.lastClickButton == mouseButtonEvent.button();
             if (screen.mouseClicked(mouseButtonEvent, isQuickClick)) {
                 this.lastClick = new MouseHandler.LastClick(currentTime, lastClick.screen());
-                this.lastClickButton = buttonInfo.button();
+                this.lastClickButton = rawButtonInfo.button();
             }
         } else {
             screen.mouseReleased(mouseButtonEvent);

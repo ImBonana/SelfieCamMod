@@ -12,10 +12,10 @@ public abstract class ScreenEffectRendererMixin {
             method = "submit",
             at = @At("HEAD"),
             argsOnly = true,
-            ordinal = 2
+            ordinal = 0
     )
 
-    private boolean hideHudWhenInCamera(boolean original) {
-        return original || SelfiecamClient.getCameraController().isInSelfieMode();
+    private boolean hideHudWhenInCamera(boolean hideGui) {
+        return hideGui || SelfiecamClient.getCameraController().isInSelfieMode();
     }
 }

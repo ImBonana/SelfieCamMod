@@ -58,12 +58,12 @@ public class ModPlayerController {
         );
 
         parentModel.translateToHand(avatarRenderState, humanoidArm, poseStack);
-        poseStack.mulPose(Axis.XP.rotationDegrees(-20.0F));
-        poseStack.mulPose(Axis.YP.rotationDegrees(180.0F));
+        poseStack.rotate(Axis.XP.rotationDegrees(-20.0F));
+        poseStack.rotate(Axis.YP.rotationDegrees(180.0F));
         poseStack.translate((humanoidArm == HumanoidArm.LEFT ? -1 : 1) / 16.0F, 0.8F, -0.35);
         itemStackRenderState.submit(poseStack, submitNodeCollector, i, OverlayTexture.NO_OVERLAY, avatarRenderState.outlineColor);
 
-        poseStack.mulPose(Axis.YP.rotationDegrees(30f));
+        poseStack.rotate(Axis.YP.rotationDegrees(30f));
         poseStack.popPose();
 
         return true;

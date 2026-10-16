@@ -1,18 +1,18 @@
 package me.imbanana.selfiecam;
 
-import com.mojang.blaze3d.buffers.GpuBuffer;
-import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.NativeImage;
-import com.mojang.blaze3d.systems.CommandEncoder;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.textures.GpuTexture;
+import com.mojang.renderpearl.api.buffers.GpuBuffer;
+import com.mojang.renderpearl.api.buffers.GpuBufferSlice;
+import com.mojang.renderpearl.api.textures.GpuTexture;
 import me.imbanana.selfiecam.mixin.CameraAccessor;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Util;
 import org.joml.Vector2i;
 
@@ -32,6 +32,8 @@ public class ModCamera {
     private boolean isInSelfieMode = false;
     private boolean shouldHideGUI = false;
     private double zoomPercentage = DEFAULT_ZOOM;
+
+    private Identifier cameraEffect = null;
 
     public void setInSelfieMode(boolean value) {
         isInSelfieMode = value;
@@ -65,6 +67,14 @@ public class ModCamera {
         camera.selfieCam$move(-camera.selfieCam$getMaxZoom((float) calcZoom(this.zoomPercentage)), 0, 0);
     }
 
+    public void setCameraEffect(Identifier effect) {
+        this.cameraEffect = effect;
+    }
+
+    public Identifier getCameraEffect() {
+        return this.cameraEffect;
+    }
+
     public void handleMouseScroll(Vector2i scroll) {
         float zoomAmount = -scroll.y / 10f;
         zoomPercentage = Math.clamp(zoomPercentage + zoomAmount, 0, 1f);
@@ -90,7 +100,7 @@ public class ModCamera {
             this.shouldHideGUI = true;
             minecraft.gameRenderer.update(DeltaTracker.ONE);
             minecraft.gameRenderer.extract(DeltaTracker.ONE, true);
-            minecraft.gameRenderer.render(DeltaTracker.ONE, true);
+            minecraft.gameRenderer.render();
 
             GpuTexture gpuTexture = renderTarget.getColorTexture();
 

@@ -12,7 +12,6 @@ import net.minecraft.client.KeyboardHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
-import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -34,12 +33,12 @@ public class KeyboardHandlerMixin {
         if (!screen.isEnabled()) return original;
         if (!screen.canInteract()) return original;
 
-        if (action == GLFW.GLFW_PRESS || action == GLFW.GLFW_REPEAT) {
+        if (action == InputConstants.PRESS || action == InputConstants.REPEAT) {
             if (screen.keyPressed(keyEvent) && !screen.isEnabled()) {
                 InputConstants.Key key = InputConstants.getKey(keyEvent);
                 KeyMapping.set(key, false);
             }
-        } else if (action == GLFW.GLFW_RELEASE) {
+        } else if (action == InputConstants.RELEASE) {
             screen.keyReleased(keyEvent);
         }
 

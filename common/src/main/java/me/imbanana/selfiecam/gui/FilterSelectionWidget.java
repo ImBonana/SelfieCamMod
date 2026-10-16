@@ -161,12 +161,7 @@ public class FilterSelectionWidget extends AbstractContainerWidget {
 
         @Override
         public void onPress(InputWithModifiers inputWithModifiers) {
-            if (shader == null) {
-                Minecraft.getInstance().gameRenderer.clearPostEffect();
-                return;
-            }
-
-            Minecraft.getInstance().gameRenderer.setPostEffect(shader);
+            SelfiecamClient.getCameraController().setCameraEffect(shader);
         }
     }
 }
